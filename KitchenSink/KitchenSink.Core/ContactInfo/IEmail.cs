@@ -4,7 +4,7 @@ namespace KitchenSink.Core.ContactInfo
 {
     public interface IEmail : IPII
     {
-        string Email { get; set; }
         ContactType Type { get; set; }
+        string Value { get; set; }
     }
 }

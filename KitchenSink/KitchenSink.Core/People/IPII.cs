@@ -5,6 +5,7 @@ namespace KitchenSink.Core.People
 {
     public interface IPII
     {
+        string EncryptedPayload { get; set; }
         IPII Decrypt(ICrypto crypto);
 
         IPII Encrypt(ICrypto crypto);
