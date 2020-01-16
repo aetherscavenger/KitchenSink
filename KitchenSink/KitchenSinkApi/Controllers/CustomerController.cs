@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KitchenSink.Core.Customers;
+using KitchenSinkApi.PersistenceEmulator.Aggregators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +13,22 @@ namespace KitchenSinkApi.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
+        private IAggregator<Customer> _aggregator;
+        public CustomerController(CustomerAggregator<Customer> aggregator)
+        {
+            _aggregator = aggregator;
+        }
         [HttpGet]
         public List<Customer> Get(int? id = null)
         {
+            var results = _aggregator.GetAll();
 
+            if (id != null)
+            {
+                return _aggregator.Get((int)id);
+            }
+
+            return results;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace KitchenSink.Core.Geo
 {
     public interface IGeoSpatial
     {
-        float Latitude { get; }
-        float Longitude { get; }
+        float Latitude { get; set; }
+        float Longitude { get; set; }
     }
 }

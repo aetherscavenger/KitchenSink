@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KitchenSink.Core.Agents;
 using KitchenSink.Core.Auth;
+using KitchenSink.Core.Customers;
 using KitchenSink.Core.DataAccessor;
 using KitchenSinkApi.Auth;
 using KitchenSinkApi.PersistenceEmulator;
@@ -36,6 +37,7 @@ namespace KitchenSinkApi
             services.AddSingleton<IDataAccessor, JsonAccessor>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<AgentAggregator<Agent>>();
+            services.AddScoped<CustomerAggregator<Customer>>();
 
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
