@@ -15,8 +15,8 @@ namespace KitchenSink.Core.Agents
 
     public interface IAgent : IEntity, IQuickContact
     {
-        IAddress Address { get; set; }
-        IList<IPhone> Phones { get; set; }
+        Address Address { get; set; }
+        List<Phone> Phones { get; set; }
         int Tier { get; set; }
     }
 }

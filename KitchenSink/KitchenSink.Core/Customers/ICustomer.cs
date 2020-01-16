@@ -20,17 +20,17 @@ namespace KitchenSink.Core.Customers
 		#region Public Properties
 
 		Guid Guid { get; set; }
-		IList<KvP<AddressType, IAddress>> Address { get; set; }
-		IAgent Agent { get; set; }
+		List<KvP<AddressType, Address>> Address { get; set; }
+		Agent Agent { get; set; }
 
 		//This should probably be represented by transactions rather than a float
 		//KISS for now.
 		float Balance { get; set; }
 
-		IList<IEmail> Emails { get; set; }
+		List<Email> Emails { get; set; }
 		bool IsActive { get; set; }
-		IList<IPhone> Phones { get; set; }
-		IList<string> Tags { get; set; }
+		List<Phone> Phones { get; set; }
+		List<string> Tags { get; set; }
 
 		#endregion Public Properties
 	}

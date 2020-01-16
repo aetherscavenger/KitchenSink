@@ -20,22 +20,22 @@ namespace KitchenSink.Core.Customers
 		#region Public Properties
 
 		public int _id { get; set; }
-		public IList<KvP<AddressType, IAddress>> Address { get; set; }
-		public IAgent Agent { get; set; }
+		public List<KvP<AddressType, Address>> Address { get; set; }
+		public Agent Agent { get; set; }
 		public float Balance { get; set; }
 		public DateTime? BirthDate { get; set; }
-		public IList<KvP<string, string>> Characteristics { get; set; }
-		public IList<IEmail> Emails { get; set; }
+		public List<KvP<string, string>> Characteristics { get; set; }
+		public List<Email> Emails { get; set; }
 		public string EncryptedPayload { get; set; }
 		public string FirstName { get; set; }
 		public Guid Guid { get; set; }
 		public bool IsActive { get; set; }
-		public IGeoSpatial LastMobileLocation { get; set; }
+		public GeoSpatial LastMobileLocation { get; set; }
 		public string LastName { get; set; }
 		public string MiddleName { get; set; }
-		public IList<IPhone> Phones { get; set; }
+		public List<Phone> Phones { get; set; }
 		public string PreferredName { get; set; }
-		public IList<string> Tags { get; set; }
+		public List<string> Tags { get; set; }
 
 		#endregion Public Properties
 

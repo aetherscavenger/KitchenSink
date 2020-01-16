@@ -32,7 +32,7 @@ namespace KitchenSinkApi.Controllers
 
             return results;
         }
-
+        [HttpPost]
         public IEntity Post([FromBody]Agent agent)
         {
             var result = _aggregator.Set(agent);

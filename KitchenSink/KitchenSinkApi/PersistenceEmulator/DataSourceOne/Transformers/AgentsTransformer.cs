@@ -28,7 +28,7 @@ namespace KitchenSinkApi.PersistenceEmulator.DataSourceOne.Transformers
                 PostalCode = from.ZipCode,
                 StateProvince = from.State
             };
-            returnMe.Phones = new List<IPhone>();
+            returnMe.Phones = new List<Phone>();
             returnMe.Phones.Add(new Phone { Number = from.Phone.Primary, Type = ContactType.Primary });
             returnMe.Phones.Add(new Phone { Number = from.Phone.Mobile, Type = ContactType.Mobile });
 
@@ -52,7 +52,7 @@ namespace KitchenSinkApi.PersistenceEmulator.DataSourceOne.Transformers
             returnMe.ZipCode = from.Address.PostalCode;
 
             returnMe.Tier = from.Tier;
-
+            returnMe.Phone = new PhoneDTO();
             returnMe.Phone.Primary = from.Phones.FirstOrDefault(p=>p.Type == ContactType.Primary).Number;
             returnMe.Phone.Mobile = from.Phones.FirstOrDefault(p => p.Type == ContactType.Mobile).Number;
 

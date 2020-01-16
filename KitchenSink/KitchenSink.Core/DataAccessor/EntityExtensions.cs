@@ -6,7 +6,7 @@ namespace KitchenSink.Core.DataAccessor
 {
     public static class EntityExtensions
     {
-        public static IEntity Replace(this IEntity me, IEntity withMe)
+        public static IEntity ReplaceWith(this IEntity me, IEntity withMe)
         {
             var type = me.GetType();
             var props = type.GetProperties();

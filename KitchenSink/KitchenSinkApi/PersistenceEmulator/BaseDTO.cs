@@ -12,7 +12,7 @@ namespace KitchenSinkApi.PersistenceEmulator
 
         public virtual void Replace(IEntity replaceWithMe)
         {
-            Replace(replaceWithMe);
+            this.ReplaceWith(replaceWithMe);
         }
     }
 }

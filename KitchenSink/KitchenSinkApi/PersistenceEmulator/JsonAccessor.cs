@@ -47,9 +47,10 @@ namespace KitchenSinkApi.PersistenceEmulator
             //scale well.
             var writeToMe = Read<T>();
             var exists = writeToMe.FirstOrDefault(w => w._id == writeMe._id);
-            if (exists != null)
+            if (exists == null)
             {
-                writeMe._id = writeToMe.Max(w => w._id) + 1;
+                if(writeMe._id == default(int))
+                    writeMe._id = writeToMe.Max(w => w._id) + 1;
                 writeToMe.Add(writeMe);
             }
             else            

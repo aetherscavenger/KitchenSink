@@ -29,15 +29,15 @@ namespace KitchenSinkApi.PersistenceEmulator.DataSourceOne.Transformers
 			returnMe.Characteristics.Add("Age", from.Age.ToString());
 			returnMe.Characteristics.Add("EyeColor", from.EyeColor);
 
-			returnMe.Address = new List<KvP<AddressType, IAddress>>();
+			returnMe.Address = new List<KvP<AddressType, Address>>();
 			returnMe.Address.Add(AddressType.Primary, new Address { AddressLine1 = from.Address });
-			returnMe.Emails = new List<IEmail>();
+			returnMe.Emails = new List<Email>();
 			returnMe.Emails.Add(new Email { Value = from.Email, Type = ContactType.Primary });
 			returnMe.Guid = from.Guid;
 			returnMe.IsActive = from.IsActive;
 			returnMe.FirstName = from.Name.First;
 			returnMe.LastName = from.Name.Last;
-			returnMe.Phones = new List<IPhone>();
+			returnMe.Phones = new List<Phone>();
 			returnMe.Phones.Add(new Phone { Number = from.Phone });
 			returnMe.LastMobileLocation = new GeoSpatial { Latitude = float.Parse(from.Latitude), Longitude = float.Parse(from.Longitude) };
 			returnMe.Tags = from.Tags.ToList();
@@ -48,16 +48,18 @@ namespace KitchenSinkApi.PersistenceEmulator.DataSourceOne.Transformers
 		public TOrigin Transform(TDest from)
 		{
 			var returnMe = new Customers();
+			returnMe._id = from._id;
 			returnMe.Address = from.Address.FirstOrDefault(a=>a.Key == AddressType.Primary).Value.AddressLine1;
 			returnMe.Age = int.Parse(from.Characteristics.FirstOrDefault(a => a.Key == "Age").Value);
 			returnMe.AgentId = from.Agent._id;
-			returnMe.Balance = from.Balance.ToString("C:2");
+			returnMe.Balance = from.Balance.ToString("C2");
 			returnMe.Email = from.Emails.FirstOrDefault(e => e.Type == ContactType.Primary).Value;
 			returnMe.EyeColor = from.Characteristics.FirstOrDefault(a => a.Key == "EyeColor").Value;
 			returnMe.Guid = from.Guid;
 			returnMe.IsActive = from.IsActive;
 			returnMe.Latitude = from.LastMobileLocation.Latitude.ToString();
 			returnMe.Longitude = from.LastMobileLocation.Longitude.ToString();
+			returnMe.Name = new NameDTO();
 			returnMe.Name.First = from.FirstName;
 			returnMe.Name.Last = from.LastName;
 			returnMe.Phone = from.Phones.FirstOrDefault(p => p.Type == ContactType.Primary).Number;
