@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KitchenSink.Core.Agents;
 using KitchenSink.Core.Auth;
 using KitchenSink.Core.DataAccessor;
 using KitchenSinkApi.Auth;
 using KitchenSinkApi.PersistenceEmulator;
+using KitchenSinkApi.PersistenceEmulator.Aggregators;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +35,7 @@ namespace KitchenSinkApi
             services.AddControllers();
             services.AddSingleton<IDataAccessor, JsonAccessor>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<AgentAggregator<Agent>>();
 
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);

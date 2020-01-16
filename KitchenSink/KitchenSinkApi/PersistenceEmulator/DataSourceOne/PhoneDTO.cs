@@ -7,7 +7,7 @@ namespace KitchenSinkApi.PersistenceEmulator.DataSourceOne
 {
     public class PhoneDTO
     {
-        string Primary { get; set; }
-        string Mobile { get; set; }
+        public string Primary { get; set; }
+        public string Mobile { get; set; }
     }
 }

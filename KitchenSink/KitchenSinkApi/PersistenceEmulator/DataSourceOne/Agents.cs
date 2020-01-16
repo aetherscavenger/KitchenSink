@@ -1,9 +1,8 @@
-﻿using KitchenSink.Core.DataAccessor;
-
-namespace KitchenSinkApi.PersistenceEmulator.DataSourceOne
+﻿namespace KitchenSinkApi.PersistenceEmulator.DataSourceOne
 {
     public class Agents : BaseDTO
     {
+        public string Address { get; set; }
         public string City { get; set; }
         public string Name { get; set; }
         public PhoneDTO Phone { get; set; }

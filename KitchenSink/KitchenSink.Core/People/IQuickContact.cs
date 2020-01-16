@@ -2,6 +2,6 @@
 {
     public interface IQuickContact
     {
-        string DisplayName { get; }
+        string DisplayName { get; set;  }
     }
 }
