@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KitchenSink.Core.Customers;
+using KitchenSink.Core.DataAccessor;
 using KitchenSinkApi.PersistenceEmulator.Aggregators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,12 @@ namespace KitchenSinkApi.Controllers
             }
 
             return results;
+        }
+        [HttpPost]
+        public IEntity Post([FromBody] Customer customer)
+        {
+            var result = _aggregator.Set(customer);
+            return result;
         }
     }
 }

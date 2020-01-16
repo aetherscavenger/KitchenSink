@@ -36,5 +36,13 @@ namespace KitchenSinkApi.PersistenceEmulator.Aggregators
             }
             return returnUs;
         }
+
+        public IEntity Set(T setMe)
+        {
+            var transformer = new AgentsTransformer<Agents, Agent>();
+            var saveMe = transformer.Transform(setMe);
+            var result = _dataAccessor.Write<Agents>(saveMe, null);
+            return result.Payload;
+        }
     }
 }

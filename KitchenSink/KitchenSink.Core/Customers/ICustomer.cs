@@ -3,6 +3,7 @@ using KitchenSink.Core.ContactInfo;
 using KitchenSink.Core.DataAccessor;
 using KitchenSink.Core.Geo;
 using KitchenSink.Core.People;
+using System;
 using System.Collections.Generic;
 
 namespace KitchenSink.Core.Customers
@@ -18,6 +19,7 @@ namespace KitchenSink.Core.Customers
 	{
 		#region Public Properties
 
+		Guid Guid { get; set; }
 		IList<KvP<AddressType, IAddress>> Address { get; set; }
 		IAgent Agent { get; set; }
 

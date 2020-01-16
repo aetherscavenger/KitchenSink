@@ -33,6 +33,7 @@ namespace KitchenSinkApi.PersistenceEmulator.DataSourceOne.Transformers
 			returnMe.Address.Add(AddressType.Primary, new Address { AddressLine1 = from.Address });
 			returnMe.Emails = new List<IEmail>();
 			returnMe.Emails.Add(new Email { Value = from.Email, Type = ContactType.Primary });
+			returnMe.Guid = from.Guid;
 			returnMe.IsActive = from.IsActive;
 			returnMe.FirstName = from.Name.First;
 			returnMe.LastName = from.Name.Last;
@@ -46,7 +47,23 @@ namespace KitchenSinkApi.PersistenceEmulator.DataSourceOne.Transformers
 
 		public TOrigin Transform(TDest from)
 		{
-			throw new NotImplementedException();
+			var returnMe = new Customers();
+			returnMe.Address = from.Address.FirstOrDefault(a=>a.Key == AddressType.Primary).Value.AddressLine1;
+			returnMe.Age = int.Parse(from.Characteristics.FirstOrDefault(a => a.Key == "Age").Value);
+			returnMe.AgentId = from.Agent._id;
+			returnMe.Balance = from.Balance.ToString("C:2");
+			returnMe.Email = from.Emails.FirstOrDefault(e => e.Type == ContactType.Primary).Value;
+			returnMe.EyeColor = from.Characteristics.FirstOrDefault(a => a.Key == "EyeColor").Value;
+			returnMe.Guid = from.Guid;
+			returnMe.IsActive = from.IsActive;
+			returnMe.Latitude = from.LastMobileLocation.Latitude.ToString();
+			returnMe.Longitude = from.LastMobileLocation.Longitude.ToString();
+			returnMe.Name.First = from.FirstName;
+			returnMe.Name.Last = from.LastName;
+			returnMe.Phone = from.Phones.FirstOrDefault(p => p.Type == ContactType.Primary).Number;
+			returnMe.Tags = from.Tags.ToArray();
+
+			return (TOrigin)returnMe;
 		}
 
 		#endregion Public Methods

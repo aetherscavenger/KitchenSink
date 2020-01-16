@@ -28,6 +28,7 @@ namespace KitchenSink.Core.Customers
 		public IList<IEmail> Emails { get; set; }
 		public string EncryptedPayload { get; set; }
 		public string FirstName { get; set; }
+		public Guid Guid { get; set; }
 		public bool IsActive { get; set; }
 		public IGeoSpatial LastMobileLocation { get; set; }
 		public string LastName { get; set; }

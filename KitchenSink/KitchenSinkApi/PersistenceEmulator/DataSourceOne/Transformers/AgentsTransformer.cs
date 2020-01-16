@@ -53,7 +53,6 @@ namespace KitchenSinkApi.PersistenceEmulator.DataSourceOne.Transformers
 
             returnMe.Tier = from.Tier;
 
-
             returnMe.Phone.Primary = from.Phones.FirstOrDefault(p=>p.Type == ContactType.Primary).Number;
             returnMe.Phone.Mobile = from.Phones.FirstOrDefault(p => p.Type == ContactType.Mobile).Number;
 
