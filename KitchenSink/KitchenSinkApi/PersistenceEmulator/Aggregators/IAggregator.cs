@@ -8,5 +8,6 @@ namespace KitchenSinkApi.PersistenceEmulator.Aggregators
     public interface IAggregator<T>
     {
         List<T> GetAll();
+        List<T> Get(int id);
     }
 }

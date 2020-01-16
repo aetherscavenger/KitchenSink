@@ -17,6 +17,13 @@ namespace KitchenSinkApi.PersistenceEmulator.Aggregators
         {
             _dataAccessor = dataAccessor;
         }
+
+        public List<T> Get(int id)
+        {
+            //Normally the provider or data layer filters this out, we will have to emulate it here.
+            return GetAll().Where(r => r._id == id).ToList();
+        }
+
         public List<T> GetAll()
         {
             //Better to use reflection here. Refactor if there's time

@@ -5,23 +5,32 @@ using System.Threading.Tasks;
 using KitchenSink.Core.Agents;
 using KitchenSink.Core.DataAccessor;
 using KitchenSinkApi.PersistenceEmulator.Aggregators;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KitchenSinkApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AgentController : ControllerBase
     {
         private IAggregator<Agent> _aggregator;
-        public AgentController(AgentAggregator<Agent> dataAccessor)
+        public AgentController(AgentAggregator<Agent> aggregator)
         {
-            _aggregator = dataAccessor;
+            _aggregator = aggregator;
         }
         public List<Agent> Get(int? id = null)
         {
-            _aggregator.Read<Agents>
+            var results = _aggregator.GetAll();
+
+            if(id != null)
+            {
+                return _aggregator.Get((int)id);
+            }
+
+            return results;
         }
     }
 }
