@@ -1,0 +1,33 @@
+﻿@{
+	ViewData["Title"] = "Index";
+}
+<div id="agents">
+	<div class="row">
+		<div class="col-1">Id</div>
+		<div class="col-2">Name</div>
+		<div class="col-5">Address</div>
+		<div class="col-1">Tier</div>
+		<div class="col-2">Phones</div>
+		<div class="col-1"></div>
+	</div>
+	<div v-for="agent in agents">
+		<div class="row action-row" v-on:click="agent.editing!==agent.editing">
+			<div class="col-1">{{agent._id}}</div>
+			<div class="col-2"><span v-if="!agent.editing">{{agent.displayName}}</span><input v-if="agent.editing" v-model="agent.displayName" /></div>
+			<div class="col-5">{{agent.address.addressLine1}} {{agent.address.city}}, {{agent.address.stateProvince}} {{agent.address.postalCode}}</div>
+			<div class="col-1">{{agent.tier}}</div>
+			<div class="col-2">
+				<div class="row">
+					<div v-for="phone in agent.phones">
+						<div class="col-12">{{phone.number}} ({{phone.typeDisplay}})</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-1"><button class="btn btn-info">View Customers</button></div>
+		</div>
+	</div>
+</div>
+
+@section scripts {
+	<script src="~/js/agent/agent-vue.js"></script>
+}
