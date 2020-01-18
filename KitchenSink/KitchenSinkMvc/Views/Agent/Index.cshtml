@@ -1,29 +1,193 @@
 ﻿@{
 	ViewData["Title"] = "Index";
 }
+ @** Bleh, monolithic. Maintenence is going to be high in this section.
+ * Really should split out these into components. I've spent enough time on this exercise though. KISS it for now.*@
+
 <div id="agents">
 	<div class="row">
 		<div class="col-1">Id</div>
-		<div class="col-2">Name</div>
-		<div class="col-5">Address</div>
+		<div class="col-4">Name</div>
 		<div class="col-1">Tier</div>
-		<div class="col-2">Phones</div>
-		<div class="col-1"></div>
+		<div class="col-3">Phones</div>
+		<div class="col-3"></div>
 	</div>
 	<div v-for="agent in agents">
-		<div class="row action-row" v-on:click="agent.editing!==agent.editing">
+		<div class="row action-row" v-on:click="showRow(agent)">
 			<div class="col-1">{{agent._id}}</div>
-			<div class="col-2"><span v-if="!agent.editing">{{agent.displayName}}</span><input v-if="agent.editing" v-model="agent.displayName" /></div>
-			<div class="col-5">{{agent.address.addressLine1}} {{agent.address.city}}, {{agent.address.stateProvince}} {{agent.address.postalCode}}</div>
+			<div class="col-4">{{agent.displayName}}</div>
 			<div class="col-1">{{agent.tier}}</div>
-			<div class="col-2">
+			<div class="col-3">
 				<div class="row">
 					<div v-for="phone in agent.phones">
 						<div class="col-12">{{phone.number}} ({{phone.typeDisplay}})</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-1"><button class="btn btn-info">View Customers</button></div>
+			<div class="col-3"><button v-on:click.stop.prevent="viewCustomers($event, agent)" class="btn btn-info">View Customers</button></div>
+		</div>
+	</div>
+	<div class="row action-row" v-on:click="newAgent()">
+		<div class="col-12"><button class="btn btn-primary btn-block">Add new Agent</button></div>
+	</div>
+	<div v-if="selectedAgent._id !== null">
+		<div class="floating-backdrop" v-on:click="cancelEdit()"></div>
+		<div class="floating-pane">
+			<div class="row bg-white">
+				<div class="col-12">
+					<div>
+						<div class="form-group">
+							<label for="name">Name</label>
+							<input id="name" v-bind:readonly="!selectedAgent.editing" class="form-control" v-model="selectedAgent.displayName" />
+						</div>
+						<div class="form-group">
+							<label for="address">Address</label>
+							<input id="address" v-bind:readonly="!selectedAgent.editing" class="form-control" v-model="selectedAgent.address.addressLine1" />
+						</div>
+						<div class="form-group">
+							<label for="city">City</label>
+							<input id="city" v-bind:readonly="!selectedAgent.editing" class="form-control col-sm-4 d-inline" v-model="selectedAgent.address.city" />
+							<label for="state">State</label>
+							<input id="state" v-bind:readonly="!selectedAgent.editing" class="form-control col-sm-2 d-inline" v-model="selectedAgent.address.stateProvince" />
+							<label for="zip">Zip</label>
+							<input id="zip" v-bind:readonly="!selectedAgent.editing" class="form-control col-sm-2 d-inline" v-model="selectedAgent.address.postalCode" />
+						</div>
+						<div class="form-group">
+							<label for="tier">Tier</label>
+							<input id="tier" type="number" v-bind:readonly="!selectedAgent.editing" class="form-control col-sm-2 " v-model="selectedAgent.tier" />
+						</div>
+						<div v-for="phone in selectedAgent.phones">
+							<div class="form-group">
+								<label>Phone ({{phone.typeDisplay}}) <input class="form-control" v-bind:readonly="!selectedAgent.editing" v-model="phone.number" /></label>
+							</div>
+						</div>
+					</div>
+					<button v-if="!selectedAgent.editing" class="btn btn-warning" v-on:click="editRow(selectedAgent)">Edit</button>
+					<button v-if="selectedAgent.editing" class="btn btn-success" v-on:click="saveEdit(selectedAgent)">Save</button>
+					<button v-if="selectedAgent.editing" class="btn btn-danger" v-on:click="cancelEdit()">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div v-if="peekCustomers._id !== null && selectedCustomer._id === null">
+		<div class="floating-backdrop" v-on:click="cancelPeek()"></div>
+		<div class="floating-pane">
+			<div class="row">
+				<div class="col-12"><button class="btn btn-primary btn-block" v-on:click="newCustomer()">Add new customer</button></div>
+			</div>
+			<div class="row bg-white">
+				<div class="col-12">
+					<div class="row action-row">
+						<div class="col-1">
+							Id
+						</div>
+						<div class="col-4">
+							Name
+						</div>
+						<div class="col-3">
+							City
+						</div>
+						<div class="col-3">
+							State
+						</div>
+						<div class="col-2"></div>
+					</div>
+					<div v-for="cust in agentCustomers">
+						<div class="row action-row" v-on:click="showCustRow(cust)">
+							<div class="col-1">
+								{{cust._id}}
+							</div>
+							<div class="col-4">
+								{{cust.lastName}}, {{cust.firstName}}
+							</div>
+							<div class="col-2">
+								{{cust.address[0].value.city}}
+							</div>
+							<div class="col-3">
+								{{cust.address[0].value.stateProvince}}
+							</div>
+							<div class="col-2"><button class="btn btn-danger" v-on:click.stop="deleteCust(cust)">Delete</button></div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div v-if="selectedCustomer._id !== null">
+		<div class="floating-backdrop" v-on:click="cancelCustEdit()"></div>
+		<div class="floating-pane">
+			<div class="row bg-white">
+				<div class="col-12">
+					<div class="row">
+						<div class="col-4">
+							<label>ID: {{selectedCustomer._id}}</label>
+						</div>
+						<div class="col-8">
+							<label>GUID: {{selectedCustomer.guid}}</label>
+						</div>
+						<div class="col-6">
+							<label>Last Mobile Location: {{selectedCustomer.lastMobileLocation}}</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-6">
+							<label>Agent</label>
+							<select class="form-control" v-bind:disabled="!selectedCustomer.editing" v-model="selectedCustomer.agent._id"><option v-for="a in agents" v-bind:value="a._id">{{a.displayName}}</option></select>
+						</div>
+						<div class="col-6">
+							<label>Active?<input type="checkbox" class="form-control col-sm-4 d-inline" v-bind:disabled="!selectedCustomer.editing" v-model="selectedCustomer.isActive" /></label>
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col-6">
+							<label>Last Name: <input class="form-control" v-bind:readonly="!selectedCustomer.editing" v-model="selectedCustomer.lastName" /></label>
+						</div>
+						<div class="col-6">
+							<label>First Name: <input class="form-control" v-bind:readonly="!selectedCustomer.editing" v-model="selectedCustomer.firstName" /></label>
+						</div>
+						<div class="col-6">
+							<label>Balance: <span class="input-group-addon">$</span><input type="number" class="form-control col-sm-4 d-inline" v-bind:disabled="!selectedCustomer.editing" v-model="selectedCustomer.balance" /></label>
+						</div>
+						<div class="col-12">
+							<label>Address: <input class="form-control col-sm-12 d-inline" v-bind:readonly="!selectedCustomer.editing" v-model="selectedCustomer.address[0].value.addressLine1" /></label>
+							<label>City: <input class="form-control col-sm-6 d-inline" v-bind:readonly="!selectedCustomer.editing" v-model="selectedCustomer.address[0].value.city" /></label>
+							<label>State: <input class="form-control col-sm-6 d-inline" v-bind:readonly="!selectedCustomer.editing" v-model="selectedCustomer.address[0].value.stateProvince" /></label>
+							<label>Zip: <input class="form-control col-sm-6 d-inline" v-bind:readonly="!selectedCustomer.editing" v-model="selectedCustomer.address[0].value.postalCode" /></label>
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col-4" v-for="charac in selectedCustomer.characteristics">
+							<label class="d-inline">{{charac.key}}: <input class="form-control" v-bind:readonly="!selectedCustomer.editing" v-model="charac.value" /></label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-6">
+							<label class="d-inline">Primary Email: <input class="form-control" v-bind:readonly="!selectedCustomer.editing" v-model="selectedCustomer.emails[0].value" /></label>
+						</div>
+						<div class="col-6">
+							<label class="d-inline">Primary Phone: <input class="form-control" v-bind:readonly="!selectedCustomer.editing" v-model="selectedCustomer.phones[0].number" /></label>
+						</div>
+						<div class="col-12">
+							<label>Tags</label>
+							<div class="d-inline-block col-sm-4" v-for="(t, i) in selectedCustomer.tags">
+								@*Alright normally I'd put chips here, they take a while to set up. skipping. One of many examples https://www.w3schools.com/howto/howto_css_contact_chips.asp*@
+								@*Also tag management assumes uniqueness, however the data coming in is NOT unique implying it allows the user to add multiple non-unique tags
+				however, that's absurd, we should fix that in the future.*@
+								<input class="form-control" v-bind:readonly="!selectedCustomer.editing" v-model="selectedCustomer.tags[i]" />
+							</div>
+							<button class="btn btn-success" v-if="selectedCustomer.editing" v-on:click="addTag()">Add Tag</button>
+						</div>
+					</div>
+					<div class="row">
+						<button v-if="!selectedCustomer.editing" class="btn btn-warning" v-on:click="editCustRow(selectedCustomer)">Edit</button>
+						<button v-if="selectedCustomer.editing" class="btn btn-success" v-on:click="saveCustEdit(selectedCustomer)">Save</button>
+						<button v-if="selectedCustomer.editing" class="btn btn-danger" v-on:click="cancelCustEdit()">Cancel</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

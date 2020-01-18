@@ -8,6 +8,7 @@ namespace KitchenSink.Core.DataAccessor
     {
         IList<T> Read<T>() where T : IEntity;
         IList<T> Read<T>(IDictionary<string, object> parameters) where T : IEntity;
+        void Delete<T>(int id) where T : IEntity;
         IResult<T> Write<T>(T writeMe, IDictionary<string, object> parameters) where T : IEntity;
     }
 }

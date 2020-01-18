@@ -20,6 +20,13 @@ namespace KitchenSinkMvc.DAL
 			_client = new HttpClient();
 			_client.DefaultRequestHeaders.Add("Authorization", GetBasicAuthHeaderString());
 		}
+
+		public void Delete<T>(int id) where T : IEntity
+		{
+			var url = $"{_config.GetSection("AppSettings")["ApiUrl"]}api/{typeof(T).Name}?id={id}";
+			 _client.DeleteAsync(url).GetAwaiter().GetResult();
+		}
+
 		public IList<T> Read<T>() where T : IEntity
 		{
 			var url = $"{_config.GetSection("AppSettings")["ApiUrl"]}api/{typeof(T).Name}";
@@ -32,7 +39,7 @@ namespace KitchenSinkMvc.DAL
 
 		public IList<T> Read<T>(IDictionary<string, object> parameters) where T : IEntity
 		{
-			var url = $"{_config.GetSection("AppSettings")["ApiUrl"]}/api/{typeof(T).Name}?";
+			var url = $"{_config.GetSection("AppSettings")["ApiUrl"]}api/{typeof(T).Name}?";
 			url += string.Join("&", parameters.Select(p => $"{p.Key}={p.Value}"));
 
 			var response = _client.GetAsync(url).GetAwaiter().GetResult();
@@ -44,12 +51,12 @@ namespace KitchenSinkMvc.DAL
 
 		public IResult<T> Write<T>(T writeMe, IDictionary<string, object> parameters) where T : IEntity
 		{
-			var url = $"{_config.GetSection("AppSettings")["ApiUrl"]}/api/{typeof(T).Name}";
+			var url = $"{_config.GetSection("AppSettings")["ApiUrl"]}api/{typeof(T).Name}";
 			var content = new StringContent(JsonConvert.SerializeObject(writeMe), Encoding.UTF8, "application/json");
 			var response = _client.PostAsync(url, content).GetAwaiter().GetResult();
 			var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
-			return JsonConvert.DeserializeObject<Result<T>>(json);
+			return new Result<T>(AccessorStatus.Succeeded, JsonConvert.DeserializeObject<T>(json));
 		}
 
 		private string GetBasicAuthHeaderString()

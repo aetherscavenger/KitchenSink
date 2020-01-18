@@ -8,7 +8,7 @@ namespace KitchenSinkApi.PersistenceEmulator.DataSourceOne
 {
     public class Customers : BaseDTO
     {
-        public int AgentId { get; set; }
+        public int Agent_Id { get; set; }
         public Guid Guid { get; set; }
         public bool IsActive { get; set; }
         public string Balance { get; set; }

@@ -4,6 +4,6 @@ namespace KitchenSinkMvc.Models
 {
 	public class PhoneVM : Phone
 	{
-		public char TypeDisplay => Type.ToString()[0];
+		public string TypeDisplay => Type.ToString().Substring(0,2);
 	}
 }

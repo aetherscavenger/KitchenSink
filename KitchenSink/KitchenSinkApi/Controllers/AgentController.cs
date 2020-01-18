@@ -23,13 +23,11 @@ namespace KitchenSinkApi.Controllers
         }
         public List<Agent> Get(int? id = null)
         {
-            var results = _aggregator.GetAll();
-
             if(id != null)
             {
                 return _aggregator.Get((int)id);
             }
-
+            var results = _aggregator.GetAll();
             return results;
         }
         [HttpPost]

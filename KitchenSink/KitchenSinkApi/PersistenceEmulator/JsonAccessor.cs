@@ -20,6 +20,25 @@ namespace KitchenSinkApi.PersistenceEmulator
         {
             _configuration = configuration;
         }
+
+        public void Delete<T>(int id) where T : IEntity
+        {
+            //Performs a DELETE operation, if the record exists (based on ID) it deletes it.
+            //This is normally not an expensive operation since MOST data persistence layers
+            //use unique identifiers to query a specific object by ID using B-trees or other
+            //indexing strategies. We are stuck with an O(N) operation here so this will NOT
+            //scale well.
+            var writeToMe = Read<T>();
+            var exists = writeToMe.FirstOrDefault(w => w._id == id);
+            if (exists == null)
+                return;
+
+            writeToMe.Remove(exists);
+            var path = GetPath<T>();
+            var json = JsonConvert.SerializeObject(writeToMe);
+            File.WriteAllText(path, json);
+        }
+
         public IList<T> Read<T>() where T : IEntity
         {
             var path = GetPath<T>();

@@ -1,5 +1,6 @@
 ﻿using KitchenSink.Core.Customers;
 using KitchenSink.Core.DataAccessor;
+using KitchenSink.Core.Geo;
 using KitchenSinkApi.PersistenceEmulator.DataSourceOne;
 using KitchenSinkApi.PersistenceEmulator.DataSourceOne.Transformers;
 using System;
@@ -12,10 +13,12 @@ namespace KitchenSinkApi.PersistenceEmulator.Aggregators
     public class CustomerAggregator<T> : IAggregator<T> where T : Customer
     {
         private IDataAccessor _dataAccessor;
+        private IGeoCoder _geoCoder;
 
-        public CustomerAggregator(IDataAccessor dataAccessor)
+        public CustomerAggregator(IDataAccessor dataAccessor, IGeoCoder geoCoder)
         {
             _dataAccessor = dataAccessor;
+            _geoCoder = geoCoder;
         }
 
         public List<T> Get(int id)
@@ -28,7 +31,7 @@ namespace KitchenSinkApi.PersistenceEmulator.Aggregators
         {
             //Better to use reflection here. Refactor if there's time
             var dataSourceOne = _dataAccessor.Read<Customers>();
-            var transformer = new CustomersTransformer<Customers, Customer>();
+            var transformer = new CustomersTransformer<Customers, Customer>(_geoCoder);
             var returnUs = new List<T>();
             foreach (var agent in dataSourceOne)
             {
@@ -37,12 +40,17 @@ namespace KitchenSinkApi.PersistenceEmulator.Aggregators
             return returnUs;
         }
 
+        public void Remove(int id)
+        {
+            _dataAccessor.Delete<Customers>(id);
+        }
+
         public IEntity Set(T setMe)
         {
-            var transformer = new CustomersTransformer<Customers, Customer>();
+            var transformer = new CustomersTransformer<Customers, Customer>(_geoCoder);
             var saveMe = transformer.Transform(setMe);
             var result = _dataAccessor.Write<Customers>(saveMe, null);
-            return result.Payload;
+            return transformer.Transform(result.Payload);
         }
     }
 }

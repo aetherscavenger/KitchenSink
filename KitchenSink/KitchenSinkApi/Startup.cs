@@ -6,6 +6,7 @@ using KitchenSink.Core.Agents;
 using KitchenSink.Core.Auth;
 using KitchenSink.Core.Customers;
 using KitchenSink.Core.DataAccessor;
+using KitchenSink.Core.Geo;
 using KitchenSinkApi.Auth;
 using KitchenSinkApi.PersistenceEmulator;
 using KitchenSinkApi.PersistenceEmulator.Aggregators;
@@ -38,7 +39,7 @@ namespace KitchenSinkApi
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<AgentAggregator<Agent>>();
             services.AddScoped<CustomerAggregator<Customer>>();
-
+            services.AddSingleton<IGeoCoder, BasicGeoCoder>();
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
         }

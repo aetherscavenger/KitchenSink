@@ -1,27 +1,22 @@
-﻿using KitchenSink.Core.Agents;
+﻿using KitchenSink.Core;
 using KitchenSink.Core.Auth;
 using KitchenSink.Core.ContactInfo;
+using KitchenSink.Core.Customers;
 using KitchenSink.Core.DataAccessor;
 using KitchenSink.Core.Geo;
 using KitchenSink.Core.People;
 using System;
 using System.Collections.Generic;
 
-namespace KitchenSink.Core.Customers
+namespace KitchenSinkMvc.Models
 {
-	public class Customer : ICustomer
+	public class AgentCustomer : ICustomer
 	{
-		#region Private Fields
-
-		private const string OBFUSCATE = "****";
-
-		#endregion Private Fields
-
 		#region Public Properties
 
 		public int _id { get; set; }
 		public List<KvP<AddressType, Address>> Address { get; set; }
-		public Agent Agent { get; set; }
+		public KitchenSink.Core.Agents.Agent Agent { get; set; }
 		public float Balance { get; set; }
 		public DateTime? BirthDate { get; set; }
 		public List<KvP<string, string>> Characteristics { get; set; }
@@ -43,34 +38,22 @@ namespace KitchenSink.Core.Customers
 
 		public IPII Decrypt(ICrypto crypto)
 		{
-			return (IPII)crypto.Decrypt(EncryptedPayload);
+			throw new NotImplementedException();
 		}
 
 		public IPII Encrypt(ICrypto crypto)
 		{
-			EncryptedPayload = crypto.Encrypt(this);
-			return this;
+			throw new NotImplementedException();
 		}
 
 		public IPII Obfuscate(IDictionary<string, string> parameters)
 		{
-			//TODO: 20200116-00002: Switch from string, string to string, object and
-			//create SafeCast
-			foreach (var param in parameters)
-			{
-				var prop = GetType().GetProperty(param.Key);
-				if (prop.PropertyType == typeof(string))
-					prop.SetValue(this, param.Value);
-			}
-			FirstName = OBFUSCATE;
-			MiddleName = OBFUSCATE;
-			LastName = OBFUSCATE;
-			return this;
+			throw new NotImplementedException();
 		}
 
 		public void Replace(IEntity replaceWithMe)
 		{
-			
+			throw new NotImplementedException();
 		}
 
 		#endregion Public Methods

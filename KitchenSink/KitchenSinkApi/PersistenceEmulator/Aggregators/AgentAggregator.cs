@@ -37,12 +37,18 @@ namespace KitchenSinkApi.PersistenceEmulator.Aggregators
             return returnUs;
         }
 
+        public void Remove(int id)
+        {
+            // No spec on whether we remove agents yet
+            throw new NotImplementedException();
+        }
+
         public IEntity Set(T setMe)
         {
             var transformer = new AgentsTransformer<Agents, Agent>();
             var saveMe = transformer.Transform(setMe);
             var result = _dataAccessor.Write<Agents>(saveMe, null);
-            return result.Payload;
+            return transformer.Transform(result.Payload);
         }
     }
 }
