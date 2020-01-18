@@ -4,10 +4,14 @@
 - I also assume some end points we would not persist the data and transform in flight.
 - Tag management assumes uniqueness, however the data coming in is NOT unique implying it allows the user to add multiple non-unique tags however, that's absurd, we should fix that in the future.
 - I assume delete is not the same as inactive.
+- I assume the front end will be secured, however, I only secured the API at this time using basic auth.
+- I assume we will have multiple different data sources. I have created preliminary aggregators and transformers to highlight such a possiblity.
 
 # Questions
 ## To the Stakeholders/POs
-What level of PII protection do we want to implement?
-Are we going to plug notifications into an SMS/MMS?
+- What level of PII protection do we want to implement?
+- Are we going to plug notifications into an SMS/MMS?
 
 ## To The Scrum Master/PM
+- How many future integrations are we expecting.
+- Who is in charge of the
